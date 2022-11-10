@@ -1,24 +1,11 @@
-//import 'dart:html';
 import 'package:flutter/material.dart';
-import 'package:ecommerce/coustomer%20registration.dart';
-import 'package:ecommerce/shop%20registration.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'package:ecommerce/shopkeeperdashboard.dart';
-import 'package:ecommerce/dashboard.dart' ;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ecommerce/cust_dash.dart';
-import 'package:ecommerce/add.dart';
-
+import 'package:ecommerce/registration/shopkeeper_registration.dart';
+import 'package:ecommerce/registration/customer_registration.dart';
+import 'package:ecommerce/backend/connection.dart' ;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
-// var a  ;
-// var b ;
-// var c ;
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -28,60 +15,16 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class login extends StatefulWidget {
   @override
   _loginState createState() => _loginState();
 }
-
 class _loginState extends State<login> {
-//final textController = new TextEditingController();
   final _formKey=GlobalKey<FormState>();
   var email;
   var password;
   var type;
   var invalid;
-  @override
-  Future<String> login(email,password) async {
-    var type;
-
-    var url = Uri.parse('http://'
-        '192.168.0.129:8080/login');
-    var response =
-    await http.post(url, body: {"email": email, "password": password});
-    print((response.body).runtimeType);
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = new Map<String, dynamic>.from(
-          json.decode(response.body));
-print(data.runtimeType);
-      type = data['id'];
-      var l = data['license'];
-      var p = data['p'];
-      print(p);
-
-      if(type == "shopkeeper")
-      {
-        Navigator.push(
-              context, MaterialPageRoute(builder: (_) => dashboard(license:l,)));
-      }
-       else if ( type == "customer")
-       {
-         Navigator.push(
-    context, MaterialPageRoute(builder: (_) => custdashboard(p:p,)));
-
-       }
-       else {
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('invalid email or password')));
-
-      }
-
-
-    }
-    return (type);
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,10 +115,6 @@ print(data.runtimeType);
                           ),
                         ),
                         SizedBox(height: 6.0),
-
-
-
-                        SizedBox(height: 6.0),
                         Container(
 
                           alignment: Alignment(1.0, 0),
@@ -197,13 +136,9 @@ print(data.runtimeType);
                           ),
                         ),
                         SizedBox(height: 50),
-
                         GestureDetector(
                           onTap: () {
-
-                            setState(() {
-                              login(email,password);
-                            });
+                              log_in(email,password,context);
                             },
                           child: Container(
                             height: 45,
@@ -211,7 +146,6 @@ print(data.runtimeType);
                               borderRadius: BorderRadius.circular(18),
                               color: Colors.blue[800],
                               elevation: 7,
-
                               child: Center(
                                 child: Text(
                                   'LOG IN',
@@ -228,10 +162,7 @@ print(data.runtimeType);
 
                           ),
                         ),
-
-
                         SizedBox(height: 14),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -246,13 +177,10 @@ print(data.runtimeType);
                           ],
                         ),
                         SizedBox(width: 13),
-
                         FlatButton(
                           onPressed: () {
-                            Navigator.push(
-                                context, MaterialPageRoute(builder: (_) => LoginApp()));
-
-                          },
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => customer_registration()));
+                            },
                           child:
                           Text('Register for customer',
                             style: TextStyle(
@@ -264,14 +192,10 @@ print(data.runtimeType);
                           ),
                         ),
                         SizedBox(width: 8),
-
-
                         FlatButton(
                           onPressed: () {
-                            Navigator.push(
-                                context, MaterialPageRoute(builder: (_) => BaseApp()));
-
-                          },
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => BaseApp()));
+                            },
                           child:
                           Text('Register for Shopkeeper',
                             style: TextStyle(
@@ -282,20 +206,16 @@ print(data.runtimeType);
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
                 ),
-
               ]
           ),
         ],
       ),
     );
   }
-
-
 }
-//var  type = null ;
+
 

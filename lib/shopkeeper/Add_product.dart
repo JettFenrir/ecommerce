@@ -1,53 +1,19 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:ecommerce/product_image.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
-
-void main() => runApp(App());
-
-
-class App extends StatefulWidget {
-  final String v;
-  const App(
-      {Key key, this.v})
+import 'package:ecommerce/shopkeeper/add_image.dart';
+import 'package:ecommerce/common/common.dart';
+import 'package:ecommerce/backend/connection.dart';
+class addproduct extends StatefulWidget {
+  final String user;
+  const addproduct(
+      {Key key, this.user})
       : super(key: key);
-
   @override
-  State<App> createState() => _AppState();
+  _addproductState createState() => _addproductState();
 }
-
-class _AppState extends State<App> {
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ProfilePage(license:widget.v),
-
-    );
-  }
-}
-
-class ProfilePage extends StatefulWidget {
-  final String license;
-  const ProfilePage(
-      {Key key, this.license})
-      : super(key: key);
-
-  @override
-  _ProfilePageState createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
+class _addproductState extends State<addproduct> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _nameoftheproduct;
   String _catagory;
   String _searchkey;
@@ -55,9 +21,6 @@ class _ProfilePageState extends State<ProfilePage> {
   String _cost;
   String _specification;
   String _delivarycost;
-  File _pickedImage;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   Widget _buildnameoftheproduct() {
     return TextFormField(
       decoration: InputDecoration(
@@ -66,11 +29,8 @@ class _ProfilePageState extends State<ProfilePage> {
       maxLength: 30,
       validator: (String value) {
         if (value.isEmpty) {
-
           labelText: 'product name *';
-
           return ('');
-
         }
         return null;
       },
@@ -166,19 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal[700],
-      appBar: AppBar(
-        title: Text('Add Your Product  ',
-          style: TextStyle(
-            color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 25.0,
-              letterSpacing: 2.0
-          ),
-        ),
-        centerTitle: true,
-
-      ),
+      appBar: myAppBar('Add Product',context),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -205,27 +153,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   SizedBox(height: 15.0),
                   _builddelivarycost(),
                   SizedBox(height: 15.0),
-
-
-                  SizedBox(height: 10.0),
                   GestureDetector(
                     onTap: () {
                       if (!_formKey.currentState.validate()) {
                         return;
                       }
                       _formKey.currentState.save();
-                      log(_nameoftheproduct,_catagory,_searchkey,_description,_cost,_specification,_delivarycost,widget.license);
+                      add_product(_nameoftheproduct,_catagory,_searchkey,_description,_cost,_specification,_delivarycost,widget.user);
                       Navigator.push(
-                          context, MaterialPageRoute(builder: (_) => MyAppp(name: _nameoftheproduct,l:widget.license,)));
+                          context, MaterialPageRoute(builder: (_) => addimage(name: _nameoftheproduct,user:widget.user,)));
                     },
-
                     child: Container(
                       height: 45,
                       child: Material(
                         borderRadius: BorderRadius.circular(18),
                         color: Colors.blue[800],
                         elevation: 7,
-
                         child: Center(
                           child: Text(
                             'save and proceed',
@@ -252,28 +195,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-void log(nameoftheproduct,catagory,searchkey,description,cost,specification,delivarycost,license)  async {
-    String info;
-    //final file = await _formkey;
 
-    var url = Uri.parse('http://192.168.0.129:8080/product');
-
-    var response =
-        await http.post(url, body: {"nameoftheproduct":nameoftheproduct,"catagory":catagory,"searchkey":searchkey,"description":description,"cost":cost,"specification":specification,"delivarycost":delivarycost,"license":license});
-
-    var respStr = "";
-
-    info = json.decode(response.body);
-    print(respStr);
-    if (response.statusCode == 201) {
-
-      respStr = response.body;
-
-    } else {
-      info = "Error in response";
-    }
-    return jsonDecode(respStr);
-  }
 
 
 

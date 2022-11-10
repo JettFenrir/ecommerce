@@ -1,84 +1,33 @@
-//import 'dart:html';
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:ecommerce/login.dart';
-//import 'package:pinch_zoom_image_updated/pinch_zoom_image_updated.dart';
-void main () => runApp(MaterialApp(
-  home: BaseApp(),
-),);
-class BaseApp extends StatefulWidget {
+
+import '../backend/connection.dart';
+
+class customer_registration extends StatefulWidget {
   @override
-  _BaseAppState createState() => _BaseAppState();
+  _customer_registrationState createState() => _customer_registrationState();
 }
 
-class _BaseAppState extends State<BaseApp> {
-  String  shopname ;
-  String shoplicence;
-  String shoptype;
+class _customer_registrationState extends State<customer_registration> {
+  //final textController = new TextEditingController();
+
   String name;
   String phone;
   String email;
-  String username;
+  String address;
   String password;
   String password2;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Widget _buildshopname() {
-    return TextFormField(
-      decoration: InputDecoration(  border: OutlineInputBorder(),labelText: 'shop Name', hintText: 'enter shop name'),
-      //maxLength: 30,
-      validator: (String value) {
-        if (value.isEmpty) {
-          return '*';
-        }
-        return null;
-      },
-      onSaved: (String value) {
-        shopname = value;
-      },
-    );
-  }
 
-  Widget _buildshoplicence(){
-    return TextFormField(
-      decoration: InputDecoration( border: OutlineInputBorder(),labelText: 'Shop Licence Number', hintText: 'enter shop licence'),
-      //maxLength: 20,
-      validator: (String value) {
-        if (value.isEmpty) {
-          return '*';
-        }
-        return null;
-      },
-      onSaved: (String value) {
-      shoplicence = value;
-      },
-    );
-  }
-  Widget _buildshoptype(){
 
-    return TextFormField(
-      decoration: InputDecoration(  border: OutlineInputBorder(), labelText: 'shop Type', hintText: 'enter type of the shop'),
-      //maxLength: 60,
-      validator: (String value) {
-        if (value.isEmpty) {
-          return '*';
-        }
-
-        return null;
-      },
-      onSaved: (String value) {
-        shoptype = value;
-      },
-    );
-  }
   Widget _buildname(){
     return TextFormField(
-      decoration: InputDecoration(  border: OutlineInputBorder(),labelText: ' Name of the Owner', hintText: 'enter name of the owner'),
+      decoration: InputDecoration(  border: OutlineInputBorder(),labelText: ' Name ', hintText: 'enter name '),
       //maxLength: 30,
       keyboardType: TextInputType.name,
       validator: (String value) {
@@ -126,9 +75,9 @@ class _BaseAppState extends State<BaseApp> {
       },
     );
   }
-  Widget _buildusername() {
+  Widget _buildaddress() {
     return TextFormField(
-      decoration: InputDecoration(  border: OutlineInputBorder(), labelText: 'user_name'),
+      decoration: InputDecoration(  border: OutlineInputBorder(), labelText: 'Shipping Address'),
       //maxLength: 12,
 
       validator: (String value) {
@@ -138,7 +87,7 @@ class _BaseAppState extends State<BaseApp> {
         return null;
       },
       onSaved: (String value) {
-        username = value;
+        address = value;
       },
     );
   }
@@ -153,53 +102,10 @@ class _BaseAppState extends State<BaseApp> {
         return null;
       },
       onSaved: (String value) {
-   password = value;
+        password = value;
       },
     );
   }
-  // Widget _buildpassword2() {
-  //   return TextFormField(
-  //
-  //       obscureText: true,
-  //     decoration: InputDecoration(labelText: 're-enter password'),
-  //     maxLength: 12,
-  //     validator: (String value) {
-  //
-  //       if (password.text != password2.text) {
-  //         return ' both passwords are incorrect';
-  //       }
-  //       return null;
-  //     },
-  //     onSaved: (String value) {
-  //       password2 = value;
-  //     },
-  //   );
-  // }
-    postTest(shopname,shoplicence,shoptype,name,phone,email,username,password) async {
-    String info;
-    //final file = await _formkey;
-
-    var url = Uri.parse('http://192.168.0.129:8080/appData');
-
-    var response =
-    await http.post(url, body: {"shopname":shopname,"shoplicence":shoplicence,"shoptype":shoptype,
-                                 "name":name,"phone":phone,
-                                 "email":email,"username":username ,
-                                  "password": password,"type":"shopkeeper"});
-
-    var respStr = "";
-
-    info = json.decode(response.body);
-    if (response.statusCode == 201) {
-
-      respStr = response.body;
-
-    } else {
-      info = "Error in response";
-    }
-    return jsonDecode(respStr);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -207,9 +113,7 @@ class _BaseAppState extends State<BaseApp> {
       appBar: AppBar(
         title: Text(
           'Registration',
-
           style: TextStyle(
-            color: Colors.black,
             fontWeight: FontWeight.bold,
             letterSpacing: 5.0,
             fontSize: 21.0,
@@ -242,12 +146,7 @@ class _BaseAppState extends State<BaseApp> {
                     ),
                     ],
                   ),
-                  SizedBox(height: 20.0),
-                  _buildshopname(),
-                  SizedBox(height: 20.0),
-                  _buildshoplicence(),
-                  SizedBox(height: 20.0),
-                  _buildshoptype(),
+
                   SizedBox(height: 20.0),
                   _buildname(),
                   SizedBox(height: 20.0),
@@ -255,7 +154,7 @@ class _BaseAppState extends State<BaseApp> {
                   SizedBox(height: 20.0),
                   _buildemail(),
                   SizedBox(height: 20.0),
-                  _buildusername(),
+                  _buildaddress(),
                   SizedBox(height: 20.0),
                   _buildpassword(),
                   SizedBox(height: 20.0),
@@ -275,18 +174,8 @@ class _BaseAppState extends State<BaseApp> {
               if (!_formKey.currentState.validate()) {
                 return;
               }
-
-               controller: _formKey.currentState.save();
-
-              print(shopname);
-              print(shoplicence);
-              print(shoptype);
-              print(name);
-              print(phone);
-              print(email);
-
-
-              postTest(shopname,shoplicence,shoptype,name,phone,email,username,password);
+              controller: _formKey.currentState.save();
+              customerregistration(name,phone,email,address,password);
               Navigator.push(
                   context, MaterialPageRoute(builder: (_) =>  MyApp()));
               showDialog(
@@ -298,13 +187,7 @@ class _BaseAppState extends State<BaseApp> {
           ),
         ],
       ),
-
-
-
-
     );
-
-
   }
 }
 Widget _buildPopupDialog(BuildContext context) {
@@ -314,7 +197,8 @@ Widget _buildPopupDialog(BuildContext context) {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Your data is sent for admin approval. Once it is approved u will be able access app. Thank you."),
+        Text(
+            "Your data is sent for admin approval. Once it is approved u will be able access app. Thank you."),
       ],
     ),
     actions: <Widget>[
@@ -322,7 +206,9 @@ Widget _buildPopupDialog(BuildContext context) {
         onPressed: () {
           Navigator.of(context).pop();
         },
-        textColor: Theme.of(context).primaryColor,
+        textColor: Theme
+            .of(context)
+            .primaryColor,
         child: const Text('Close'),
       ),
     ],

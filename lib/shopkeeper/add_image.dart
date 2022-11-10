@@ -1,48 +1,22 @@
-
-//import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show utf8;
-import 'package:ecommerce/shopkeeperdashboard.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http_parser/http_parser.dart';
-void main() {
-  runApp(MyAppp());
-}
-class MyAppp extends StatefulWidget {
+import 'package:ecommerce/common/common.dart';
+import 'package:ecommerce/shopkeeper/dashboard.dart';
+class addimage extends StatefulWidget {
+  addimage({Key key, this.name,this.user}) : super(key: key);
   final String name;
-  final String l;
-  const MyAppp(
-      {Key key, this.name,this.l})
-      : super(key: key);
-  // This widget is the root of your application.
-  @override
-  State<MyAppp> createState() => _MyAppState();
-}
-class _MyAppState extends State<MyAppp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-
-
-      home: MyHomePage(title: 'UPLOAD IMAGES',user:widget.name,m : widget.l),
-    );
-  }
-}
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title,this.user,this.m}) : super(key: key);
-  final String m;
   final String user;
-  final String title;
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _addimageState createState() => _addimageState();
 }
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _addimageState extends State<addimage> {
   List<Asset> images = <Asset>[];
   Widget buildGridView() {
     return GridView.count(
@@ -91,8 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
     var uri = Uri.parse("http://192.168.0.129:8080/photo");
     http.MultipartRequest request = new http.MultipartRequest('POST', uri);
     request.headers[''] = '';
-    request.fields['product'] = widget.user;
-    request.fields['license'] = widget.m;
+    request.fields['product'] = widget.name;
+    request.fields['license'] = widget.user;
     List<http.MultipartFile> newList = new List<http.MultipartFile>();
     for (int i = 0; i < images.length; i++) {
       ByteData byteData = await images[i].getByteData();
@@ -120,13 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal[700],
-        title: Text(widget.title,
-        style: TextStyle(
-          color: Colors.black,
-        ),),
-      ),
+      appBar: myAppBar('Add Image',context),
       body:
       Column(
         children: [
@@ -153,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ElevatedButton(
                       child: Text("Upload Images"),
                       onPressed:() {uploadmultipleimage();
-                      var l= widget.m;
+                      var l= widget.user;
                       Navigator.push(
                           context, MaterialPageRoute(builder: (_) => dashboard(license:l,)));
                       showDialog(

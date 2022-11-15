@@ -82,13 +82,7 @@ class _addimageState extends State<addimage> {
     }
     request.files.addAll(newList);
     var response = await request.send();
-    if (response.statusCode == 200) {
-      print("Image Uploaded");
-    } else {
-      print("Upload Failed");
-    }
     response.stream.transform(utf8.decoder).listen((value) {
-      print(value);
     });
   }
   @override

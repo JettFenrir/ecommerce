@@ -73,8 +73,6 @@ class _prod_detailsState extends State<prod_details> {
               children: [
                 SizedBox(width: 20.0),
                 RaisedButton(onPressed: (){
-                  print("hi");
-
                    cart(widget.name,widget.cost,widget.user,widget.shop,number,widget.delc);
                 },
                   child:Text("add to cart",

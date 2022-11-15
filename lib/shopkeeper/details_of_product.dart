@@ -23,7 +23,6 @@ class _productdetailsState extends State<productdetails> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-print(name+cost+spec+desc+delc);
     return Scaffold(
       appBar: myAppBar('DASHBOARD',context),
       body: (check==true)? ListView( scrollDirection: Axis.vertical,
@@ -230,8 +229,6 @@ print(name+cost+spec+desc+delc);
                                 fontStyle: FontStyle.normal),
                           ),
                           onPressed: () {
-
-                            print(change);
                             if(change==false){
                               _formKey.currentState.save();
                               editordeleteproduct(name,cost,spec,delc,desc,widget.user,"editfromproduct");

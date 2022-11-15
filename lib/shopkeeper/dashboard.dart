@@ -19,7 +19,7 @@ class _dashboardState extends State<dashboard> {
   Widget build(BuildContext context)  {
     String user=widget.license;
     final  names=jsonDecode(widget.products);
-    print(names.runtimeType);
+
     return Scaffold(
       appBar: myAppBar('DASHBOARD',context),
       drawer: myDrawer(context,"shopkeeper",user),
@@ -50,10 +50,10 @@ class _dashboardState extends State<dashboard> {
                           resetDuration: const Duration(milliseconds: 100),
                           maxScale: 2.5,
                           onZoomStart: () {
-                            print('Start zooming');
+
                           },
                           onZoomEnd: () {
-                            print('Stop zooming');
+
                           },
                         ),
                       ),

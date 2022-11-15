@@ -47,13 +47,11 @@ product_catagory(user) async {
 products(catagory,shop) async {
   var url = Uri.parse('http://192.168.0.129:8080/productsofsamecatagory');
   var response = await http.post(url, body: {"cat": catagory,"shoplicence":shop});
- print(response.body);
  return(response.body);
 }
 //cart
 cart(name,cost,user,shop,num,delc)async
 {
-  print("welco");
   final number = num.toString();
 var url = Uri.parse('http://192.168.0.129:8080/cart');
 var response =  await http.post(url, body: {"name":name,"cost":cost,"delc":delc,"user":user,"shoplicence":shop,"quantity":number});
@@ -108,13 +106,10 @@ posttest(shopname,shoplicence,shoptype,name,phone,email,username,password) async
 //login
 log_in(email,password,context) async {
   var type;
-  var url = Uri.parse('http://'
-      '192.168.0.129:8080/login');
-  var response =
-  await http.post(url, body: {"email": email, "password": password});
+  var url = Uri.parse('http://''192.168.0.129:8080/login');
+  var response = await http.post(url, body: {"email": email, "password": password});
   if (response.statusCode == 200) {
-    Map<String, dynamic> data = new Map<String, dynamic>.from(
-        json.decode(response.body));
+    Map<String, dynamic> data = new Map<String, dynamic>.from(json.decode(response.body));
     type = data['id'];
     var l = data['license'];
     var p = data['p'];
@@ -130,9 +125,16 @@ log_in(email,password,context) async {
     else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('invalid email or password')));
     }
-
-
   }
-  return (type);
 }
 
+check_email(user)async{
+  var url = Uri.parse('http://192.168.0.129:8080/check_email');
+  var response = await http.post(url, body: {"user":user});
+   if (response.body=="true") return (true);
+   else return (false);
+}
+change_pass(user,pass) async{
+  var url = Uri.parse('http://192.168.0.129:8080/change_pass');
+  var response = await http.post(url, body: {"user":user,"new_pass":pass});
+}

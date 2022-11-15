@@ -1,6 +1,9 @@
 import 'package:ecommerce/backend/connection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:convert';
+import 'dart:core';
 import'package:quantity_input/quantity_input.dart';
 import 'package:ecommerce/common/common.dart';
 class viewcart extends StatefulWidget {
@@ -12,7 +15,7 @@ class viewcart extends StatefulWidget {
   _viewcartState createState() => _viewcartState();
 }
 class _viewcartState extends State<viewcart> {
-  int number;
+  List <int> number=[];
   List new_list=[];
   List newlist=[];
   List names;
@@ -24,31 +27,32 @@ class _viewcartState extends State<viewcart> {
   }
   addSelection()
   {
-    for(int i=0;i<names.length;i++)
+    for(int i=0;i<names.length;i++) {
       checkSelection.add(false);
+      number.add(int.parse(names[i]['quantity']));
+    }
   }
   Widget _builditem (){
     return   (names.length>0) ?ListView.builder(
         shrinkWrap: true,
         itemCount: names.length,
         itemBuilder: (context,index){
+         
           return ListTile(
             onTap: (){
               setState(() {
                 sel.add(false);
-                checkSelection[index]=!checkSelection[index];
-                if(checkSelection[index]==true)
-                {
-                  names[index]['quantity']= number.toString();
-                  total= (int.parse(names[index]['cost'])+total)*int.parse(names[index]['quantity']);
-                  new_list.add(names[index]);
-                }
-                else {
-                  names[index]['quantity']= number.toString();
-                  total =( total-(int.parse(names[index]['cost'])*int.parse(names[index]['quantity'])) );
-                  new_list.removeAt(index);
-                }
-              });},
+                checkSelection[index]=!checkSelection[index];});
+              if(checkSelection[index]==true)
+              {
+                total= (total+(int.parse(names[index]['cost'])*number[index]));
+                new_list.add(names[index]);
+              }
+              else {
+                total =( total-(int.parse(names[index]['cost'])*number[index]));
+                new_list.removeAt(index);
+              }
+              },
             title: Card(
               color: Colors.teal[50],
               child: Stack(
@@ -73,7 +77,6 @@ class _viewcartState extends State<viewcart> {
                       IconButton(onPressed:(){
                         newlist.add(names[index]);
                         setState(() =>( names.removeAt(index)));
-                        print(newlist);
                         deleteorplaceorder(newlist,"deletefromcart",widget.user);
                         }, icon: Icon(Icons.close, color:Colors.grey, ),
                         alignment: Alignment.center,    ),
@@ -90,7 +93,7 @@ class _viewcartState extends State<viewcart> {
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(240,40,0,20),
-                          child: QuantityInput(  elevation: 2,value: int.parse(names[index]['quantity']), inputWidth: 50,buttonColor: Colors.grey[700],  onChanged:(value) =>  number =int.parse(value.replaceAll(',', ''))
+                          child: QuantityInput(  elevation: 2,value: number[index], inputWidth: 50,buttonColor: Colors.grey[700],  onChanged:(value) =>  number[index] =int.parse(value.replaceAll(',', ''))
                           ),
                         ),
                       ],
@@ -129,13 +132,11 @@ class _viewcartState extends State<viewcart> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: RaisedButton(
-                        onPressed: () {  deleteorplaceorder(newlist,"placeorder",widget.user);},
+                        onPressed: () {  deleteorplaceorder(new_list,"placeorder",widget.user);},
                         elevation: 0.5,
                         color: Colors.red,
                         child: Center(
-                          child: Text(
-                            'Pay Now',
-                          ),
+                          child: Text('Pay Now',),
                         ),
                         textColor: Colors.white,
                       ),

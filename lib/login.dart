@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ecommerce/registration/shopkeeper_registration.dart';
 import 'package:ecommerce/registration/customer_registration.dart';
 import 'package:ecommerce/backend/connection.dart' ;
+import 'package:ecommerce/forget_password.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
@@ -121,9 +122,10 @@ class _loginState extends State<login> {
                           padding: EdgeInsets.only(top: 15, left: 0),
                           child: InkWell(
                             onTap: () {
-                              setState(() {
-                              }
-                              );
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => forget_password()));
                             },
                             child: Text('Forgot Password',
                               style: TextStyle(

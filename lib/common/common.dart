@@ -111,12 +111,10 @@ Widget bottom(context,t,user){
       ],
 
       onTap: (int index) async {
-        print(user+t);
         switch (index)  {
           case 0: if(t=="shopkeeper"){ final  products = await  productandorderlist(user,"product_list") ;
             Navigator.push(context, MaterialPageRoute(builder: (_) => dashboard(license:user,products: products,)));}
           else if(t=="customer") {
-print("oseal");print(user);
              final  products = await  productandorderlist(user,"shop") ;
             Navigator.push(context, MaterialPageRoute(builder: (_) => dash(user:user,shops: products,)));
           }
@@ -133,7 +131,6 @@ print("oseal");print(user);
             }
            if(t=="customer") {
              final cart = await productandorderlist(user, "viewcart");
-             print(cart);
              Navigator.push(
                  context,
                  MaterialPageRoute(
@@ -204,7 +201,6 @@ Widget _buildreg(user,context) {
     actions: <Widget>[
       new FlatButton(
         onPressed: () {
-          // print(variable);
           if (variable != null) {
             Register_to_shop(variable,user,context);
             Navigator.of(context).pop();

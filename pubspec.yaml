@@ -40,6 +40,8 @@ dependencies:
   provider: ^6.0.2
   image_compare: ^1.1.2
   quantity_input: ^1.0.2
+  syncfusion_flutter_datagrid: ^20.3.56
+  email_auth: ^1.0.0
 
 
 

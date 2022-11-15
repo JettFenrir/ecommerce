@@ -75,7 +75,10 @@ class _viewcartState extends State<viewcart> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(onPressed:(){
-                        newlist.add(names[index]);
+                      if(checkSelection[index]) {
+                        total = (total -
+                            (int.parse(names[index]['cost']) * number[index]));
+                      }                        newlist.add(names[index]);
                         setState(() =>( names.removeAt(index)));
                         deleteorplaceorder(newlist,"deletefromcart",widget.user);
                         }, icon: Icon(Icons.close, color:Colors.grey, ),
@@ -93,9 +96,20 @@ class _viewcartState extends State<viewcart> {
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(240,40,0,20),
-                          child: QuantityInput(  elevation: 2,value: number[index], inputWidth: 50,buttonColor: Colors.grey[700],  onChanged:(value) =>  number[index] =int.parse(value.replaceAll(',', ''))
+                          child: QuantityInput(  elevation: 2,value: number[index], inputWidth: 50,buttonColor: Colors.grey[700],
+                              onChanged:(value){
+                            if(checkSelection[index]){
+                              if(int.parse(value)<=number[index]){
+                                setState(() =>(total =( total-(int.parse(names[index]['cost'])*(int.parse(value)-1)))));
+                              }
+                              else   if(int.parse(value)>=number[index]){
+                                setState(() =>(total =( total+(int.parse(names[index]['cost'])*(int.parse(value)-1)))));
+                              }
+                            }
+                            number[index] =int.parse(value.replaceAll(',', ''));
+                               },
+          )
                           ),
-                        ),
                       ],
                     ),
                   ),
